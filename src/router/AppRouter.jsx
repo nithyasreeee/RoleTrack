@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import Home from "../pages/Home";
 import Login from "../pages/Login";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import ManagerDashboard from "../pages/manager/ManagerDashboard";
@@ -9,6 +10,7 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/home" element={<Home />} />
 
       <Route path="/admin" element={
         <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>

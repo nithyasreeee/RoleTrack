@@ -8,6 +8,14 @@ import { EmployeeProvider } from "./context/EmployeeContext";
 import { ActivityProvider } from "./context/ActivityContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
+// Prevent transitions on page load
+document.documentElement.classList.add('preload');
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.documentElement.classList.remove('preload');
+  }, 100);
+});
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AuthProvider>

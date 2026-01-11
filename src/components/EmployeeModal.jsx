@@ -1,18 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEmployees } from "../context/EmployeeContext";
 
-export default function EmployeeModal({ close }) {
+export default function EmployeeModal({ close, employee }) {
   const { dispatch } = useEmployees();
 
   const [name, setName] = useState("");
   const [dept, setDept] = useState("");
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (employee) {
+      setName(employee.name || "");
+      setDept(employee.department || "");
+      setEmail(employee.email || "");
+    }
+  }, [employee]);
 
   const validate = () => {
     const newErrors = {};
     if (!name.trim()) newErrors.name = "Name is required";
     if (name.trim().length < 2) newErrors.name = "Name must be at least 2 characters";
     if (!dept.trim()) newErrors.dept = "Department is required";
+    if (employee && !email.trim()) newErrors.email = "Email is required";
+    if (employee && email && !/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
     return newErrors;
   };
 
@@ -22,7 +33,18 @@ export default function EmployeeModal({ close }) {
       setErrors(newErrors);
       return;
     }
-    dispatch({ type: "add", payload: { name, department: dept } });
+    
+    if (employee) {
+      // Update existing employee
+      dispatch({ 
+        type: "update", 
+        id: employee.id, 
+        payload: { name, department: dept, email } 
+      });
+    } else {
+      // Add new employee
+      dispatch({ type: "add", payload: { name, department: dept } });
+    }
     close();
   };
 
@@ -43,8 +65,12 @@ export default function EmployeeModal({ close }) {
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Add Employee</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Create a new employee record</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                {employee ? 'Edit Employee' : 'Add Employee'}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {employee ? 'Update employee information' : 'Create a new employee record'}
+              </p>
             </div>
           </div>
           <button 
@@ -112,6 +138,32 @@ export default function EmployeeModal({ close }) {
               </p>
             )}
           </div>
+
+          {employee && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Email *
+              </label>
+              <input
+                type="email"
+                placeholder="john.doe@company.com"
+                className={`input ${errors.email ? 'input-error' : ''}`}
+                value={email}
+                onChange={e => {
+                  setEmail(e.target.value);
+                  setErrors(prev => ({ ...prev, email: '' }));
+                }}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {errors.email}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Footer */}
@@ -127,9 +179,13 @@ export default function EmployeeModal({ close }) {
             className="btn btn-primary flex items-center space-x-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              {employee ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              )}
             </svg>
-            <span>Add Employee</span>
+            <span>{employee ? 'Update Employee' : 'Add Employee'}</span>
           </button>
         </div>
       </div>

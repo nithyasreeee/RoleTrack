@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Smooth theme transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* Prevent transitions on page load */
+.preload * {
+  transition: none !important;
+}
+
 /* Custom Animations and Utilities */
 @keyframes fadeIn {
   from {
@@ -79,81 +91,25 @@
   animation: bounce-subtle 2s ease-in-out infinite;
 }
 
-/* Add any additional custom CSS below as needed */
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+/* Card Component */
+.card {
+  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700;
+}
 
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+/* Input Component */
+.input {
+  @apply w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all;
+}
 
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+/* Button Component */
+.btn {
+  @apply px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl;
+}
 
-  .animate-fade {
-    animation: fadeIn 0.4s ease-out;
-  }
+.btn-primary {
+  @apply bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700;
+}
 
-  .animate-slide {
-    animation: slideIn 0.3s ease-out;
-  }
-
-  .animate-slide-down {
-    animation: slideDown 0.3s ease-out;
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -1000px 0;
-    }
-    100% {
-      background-position: 1000px 0;
-    }
-  }
-
-  @keyframes bounce-subtle {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-5px);
-    }
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 100%
-    );
-    background-size: 1000px 100%;
-  }
 
   .animate-bounce-subtle {
     animation: bounce-subtle 2s ease-in-out infinite;
