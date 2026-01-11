@@ -8,7 +8,7 @@ export default function Login() {
   const nav = useNavigate();
 
   const submit = () => {
-    login(role);
+    login(role, null);
     nav("/" + role);
   };
 
@@ -118,26 +118,70 @@ export default function Login() {
 
               <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="space-y-6">
                 {/* Role Selection */}
-                <div className="animate-slide-down" style={{ animationDelay: '100ms' }}>
-                  <label className="block text-sm font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
+                <div className="animate-slide-down space-y-3" style={{ animationDelay: '100ms' }}>
+                  <label className="block text-sm font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
                     Select Your Role
                   </label>
-                  <div className="relative group">
-                    <select
-                      className="w-full px-6 py-4 border-2 border-indigo-200 dark:border-purple-700 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all appearance-none cursor-pointer text-base font-semibold hover:border-indigo-400 hover:shadow-xl shadow-lg"
-                      onChange={e => setRole(e.target.value)}
-                      value={role}
-                    >
-                      <option value="admin" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white py-3">👑 Admin - Full System Access</option>
-                      <option value="manager" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white py-3">👔 Manager - Team Oversight</option>
-                      <option value="employee" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white py-3">👤 Employee - Activity Tracking</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none group-hover:scale-110 transition-transform">
-                      <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                      </svg>
+                  
+                  {/* Admin Option */}
+                  <label className="flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all group">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="admin"
+                      checked={role === 'admin'}
+                      onChange={(e) => setRole(e.target.value)}
+                      className="w-5 h-5 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <div className="flex items-center space-x-3 flex-1">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                      </div>
+                      <span className="text-lg font-bold text-gray-900 dark:text-white">Admin</span>
                     </div>
-                  </div>
+                  </label>
+
+                  {/* Manager Option */}
+                  <label className="flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all group">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="manager"
+                      checked={role === 'manager'}
+                      onChange={(e) => setRole(e.target.value)}
+                      className="w-5 h-5 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <div className="flex items-center space-x-3 flex-1">
+                      <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                      <span className="text-lg font-bold text-gray-900 dark:text-white">Manager</span>
+                    </div>
+                  </label>
+
+                  {/* Employee Option */}
+                  <label className="flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all group">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="employee"
+                      checked={role === 'employee'}
+                      onChange={(e) => setRole(e.target.value)}
+                      className="w-5 h-5 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <div className="flex items-center space-x-3 flex-1">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <span className="text-lg font-bold text-gray-900 dark:text-white">Employee</span>
+                    </div>
+                  </label>
                 </div>
 
                 {/* Login Button */}
@@ -155,25 +199,6 @@ export default function Login() {
                   </span>
                 </button>
               </form>
-
-              {/* Demo Notice */}
-              <div className="mt-8 animate-slide-down" style={{ animationDelay: '300ms' }}>
-                <div className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-2xl p-5 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 mt-0.5 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 animate-pulse shadow-lg">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-indigo-900 dark:text-indigo-300 mb-1">Demo Mode</p>
-                      <p className="text-sm text-indigo-700 dark:text-indigo-400">
-                        Select any role to explore the system. No credentials required.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Status Badge */}

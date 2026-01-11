@@ -1,76 +1,70 @@
-import { createContext, useContext, useReducer, useEffect } from "react";
+import { createContext, useContext, useReducer, useEffect, useState } from "react";
 import { load, save } from "../utils/storage";
 import { uid } from "../utils/id";
 
 const Ctx = createContext();
 
-// Generate seed data for demo purposes
-const generateSeedData = () => {
-  const now = new Date();
-  const activities = [];
-  const descriptions = [
-    "Completed project documentation",
-    "Team meeting and sprint planning",
-    "Code review for pull requests",
-    "Fixed critical bug in production",
-    "Implemented new feature module",
-    "Updated API endpoints",
-    "Database optimization tasks",
-    "Client presentation preparation",
-    "Testing and quality assurance",
-    "Research and development"
-  ];
-
-  // Generate activities for the past 4 weeks
-  for (let week = 0; week < 4; week++) {
-    const activitiesPerWeek = Math.floor(Math.random() * 5) + 3; // 3-7 activities per week
-    
-    for (let i = 0; i < activitiesPerWeek; i++) {
-      const daysAgo = (week * 7) + Math.floor(Math.random() * 7);
-      const date = new Date(now);
-      date.setDate(date.getDate() - daysAgo);
-      
-      const statuses = ['pending', 'approved', 'rejected'];
-      const statusWeights = [0.2, 0.65, 0.15]; // 20% pending, 65% approved, 15% rejected
-      const randomStatus = Math.random();
-      let status = 'approved';
-      
-      if (randomStatus < statusWeights[0]) status = 'pending';
-      else if (randomStatus < statusWeights[0] + statusWeights[2]) status = 'rejected';
-      
-      activities.push({
-        id: uid(),
-        description: descriptions[Math.floor(Math.random() * descriptions.length)],
-        employeeId: `employee-${Math.floor(Math.random() * 3) + 1}`,
-        status: status,
-        createdAt: date.toISOString(),
-        date: date.toISOString()
-      });
-    }
-  }
-  
-  return activities;
-};
-
 function reducer(state, action) {
+  let newState;
   switch (action.type) {
-    case "add":
-      const a = [...state, { 
-        ...action.payload, 
-        id: uid(), 
-        status: "pending",
-        createdAt: new Date().toISOString(),
-        date: new Date().toISOString()
-      }];
-      save("activities", a);
-      return a;
-    case "update":
-      const u = state.map(x => x.id === action.id ? { ...x, ...action.payload } : x);
-      save("activities", u);
-      return u;
-    case "init":
-      save("activities", action.payload);
-      return action.payload;
+    case "ADD":
+      newState = [
+        ...state,
+        {
+          id: uid(),
+          ...action.payload,
+          status: "pending",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      ];
+      save("activities", newState);
+      return newState;
+
+    case "UPDATE":
+      newState = state.map((a) =>
+        a.id === action.payload.id
+          ? { ...a, ...action.payload, updatedAt: new Date().toISOString() }
+          : a
+      );
+      save("activities", newState);
+      return newState;
+
+    case "APPROVE":
+      newState = state.map((a) =>
+        a.id === action.payload.id
+          ? { 
+              ...a, 
+              status: "approved", 
+              remarks: action.payload.remarks || "",
+              approvedBy: action.payload.approvedBy,
+              updatedAt: new Date().toISOString() 
+            }
+          : a
+      );
+      save("activities", newState);
+      return newState;
+
+    case "REJECT":
+      newState = state.map((a) =>
+        a.id === action.payload.id
+          ? { 
+              ...a, 
+              status: "rejected", 
+              remarks: action.payload.remarks || "",
+              rejectedBy: action.payload.rejectedBy,
+              updatedAt: new Date().toISOString() 
+            }
+          : a
+      );
+      save("activities", newState);
+      return newState;
+
+    case "DELETE":
+      newState = state.filter((a) => a.id !== action.payload);
+      save("activities", newState);
+      return newState;
+
     default:
       return state;
   }
@@ -78,20 +72,57 @@ function reducer(state, action) {
 
 export function ActivityProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, load("activities"));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Initialize with seed data if empty
   useEffect(() => {
-    if (state.length === 0) {
-      const seedData = generateSeedData();
-      dispatch({ type: "init", payload: seedData });
+    try {
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
     }
   }, []);
 
   return (
-    <Ctx.Provider value={{ activities: state, dispatch }}>
+    <Ctx.Provider value={{ activities: state, dispatch, loading, error }}>
       {children}
     </Ctx.Provider>
   );
 }
 
 export const useActivities = () => useContext(Ctx);
+
+// Filter utilities
+export const filterActivities = (activities, filters) => {
+  let filtered = [...activities];
+
+  if (filters.employeeId) {
+    filtered = filtered.filter(a => a.employeeId === filters.employeeId);
+  }
+
+  if (filters.status) {
+    filtered = filtered.filter(a => a.status === filters.status);
+  }
+
+  if (filters.startDate) {
+    filtered = filtered.filter(a => new Date(a.date) >= new Date(filters.startDate));
+  }
+
+  if (filters.endDate) {
+    filtered = filtered.filter(a => new Date(a.date) <= new Date(filters.endDate));
+  }
+
+  return filtered;
+};
+
+export const paginateActivities = (activities, page, pageSize = 10) => {
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
+  return {
+    data: activities.slice(start, end),
+    totalPages: Math.ceil(activities.length / pageSize),
+    currentPage: page,
+    total: activities.length
+  };
+};

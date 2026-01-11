@@ -1,32 +1,58 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("session"));
-    if (data && data.expiresAt > Date.now()) setUser(data.user);
-    else localStorage.removeItem("session");
+    const stored = localStorage.getItem("auth");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      const expiry = new Date(parsed.expiry);
+      if (expiry > new Date()) {
+        setUser(parsed);
+      } else {
+        localStorage.removeItem("auth");
+      }
+    }
+    setLoading(false);
   }, []);
 
-  const login = (role) => {
-    const session = {
-      user: { role },
-      expiresAt: Date.now() + 60 * 60 * 1000
+  const login = (role, employeeData = null) => {
+    const expiry = new Date();
+    expiry.setHours(expiry.getHours() + 1);
+
+    const userData = {
+      role,
+      employeeId: employeeData?.id || null,
+      employeeName: employeeData?.name || null,
+      email: employeeData?.email || null,
+      department: employeeData?.department || null,
+      roleTitle: employeeData?.role || null,
+      expiry: expiry.toISOString(),
     };
-    localStorage.setItem("session", JSON.stringify(session));
-    setUser(session.user);
+
+    setUser(userData);
+    localStorage.setItem("auth", JSON.stringify(userData));
   };
 
   const logout = () => {
-    localStorage.removeItem("session");
     setUser(null);
+    localStorage.removeItem("auth");
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
