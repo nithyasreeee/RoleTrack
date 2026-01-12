@@ -1,16 +1,145 @@
-# React + Vite
+# RoleTrack – Role-Based Employee Activity Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+RoleTrack is a frontend-only web application that simulates an internal employee management and activity tracking system with strict role-based access control.
 
-Currently, two official plugins are available:
+The project is built to demonstrate frontend engineering fundamentals: clean architecture, component design, state management, role isolation, UI logic, and data persistence.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Live Demo
+https://role-track-livid.vercel.app/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## GitHub Repository
+https://github.com/nithyasreeee/RoleTrack.git
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+- React (Vite)
+- React Router
+- Context API + useReducer
+- Tailwind CSS
+- localStorage (data persistence)
+- Vercel (deployment)
+
+Constraints followed:
+- No UI libraries
+- No templates or admin dashboards
+- No backend
+- Hooks-only functional components
+
+---
+
+## Features
+
+### Authentication (Frontend Simulation)
+- Role-based login: Admin / Manager / Employee
+- Session persistence using localStorage
+- Manual session expiry handling
+- Logout support
+
+### Role-Based Access Control
+- Admin: manage employees + review activities
+- Manager: review activities + read-only employees
+- Employee: view profile + submit activities
+- Route-level protection to prevent URL manipulation
+
+### Employee Management
+- Auto-generated employee IDs
+- Add employees (admin only)
+- Active / inactive status
+- Search, filter, sort
+- Manual pagination logic
+
+### Activity Tracking
+- Employees submit daily activities
+- Admin / Manager approve or reject
+- Status tracking (pending / approved / rejected)
+- Optional remarks
+
+### UI & UX
+- Responsive dashboard layout
+- Collapsible animated sidebar
+- Dark / light mode toggle (persistent)
+- Modal forms
+- Loading and empty states
+- Basic animations and transitions
+- Accessible form labels
+
+### Data Handling
+- Global state via Context API
+- Reducer-based updates
+- Persistence using localStorage
+
+---
+
+## Project Architecture
+
+router/ → Routing & role protection
+context/ → Global state (auth, employees, activities, theme)
+pages/ → Route-level screens
+modules/ → Business features (employees, activities)
+components/ → Reusable UI components
+utils/ → Helpers (storage, ids)
+
+---
+
+Design principles:
+
+- Feature-based separation
+- No prop drilling
+- UI separated from business logic
+- Predictable state updates via reducers
+- Scalable structure
+
+---
+
+## State Management Approach
+
+- useContext → global access
+- useReducer → complex state (employees, activities)
+- useState → local UI state
+- useEffect → persistence and side effects
+
+This avoids Redux while keeping state transitions explicit and maintainable.
+
+---
+
+## Role Handling Strategy
+
+- Role stored in session object
+- Route-level guards using ProtectedRoute
+- UI conditional rendering + route blocking
+- No cross-role access via direct URL navigation
+
+---
+
+## Persistence Strategy
+
+All data is stored in localStorage:
+
+- Session information
+- Employee records
+- Activity records
+- Theme preference
+
+This allows refresh-safe usage without a backend.
+
+---
+
+
+## Trade-offs
+
+- No backend → data is device-specific
+- Authentication is simulated
+- Charts implemented without external libraries
+- UI kept minimalistic to prioritize logic and architecture
+
+---
+
+## Setup Instructions
+
+```bash
+npm install
+npm run dev
