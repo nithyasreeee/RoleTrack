@@ -57,7 +57,7 @@ export default function AdminChart() {
   }, [weeklyData]);
 
   return (
-    <div className="card animate-slide">
+    <div className="card relative animate-slide">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
