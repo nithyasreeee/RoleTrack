@@ -117,9 +117,9 @@ export default function ActivityReview() {
 
       {/* Filters Section */}
       <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg mb-6 space-y-4">
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Employee Filter */}
-          <div className="flex-1 min-w-[200px]">
+          <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Employee
             </label>
@@ -138,7 +138,7 @@ export default function ActivityReview() {
           </div>
 
           {/* Start Date */}
-          <div className="flex-1 min-w-[180px]">
+          <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Start Date
             </label>
@@ -151,7 +151,7 @@ export default function ActivityReview() {
           </div>
 
           {/* End Date */}
-          <div className="flex-1 min-w-[180px]">
+          <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               End Date
             </label>
@@ -167,7 +167,7 @@ export default function ActivityReview() {
           <div className="flex items-end">
             <button
               onClick={clearFilters}
-              className="btn btn-secondary whitespace-nowrap"
+              className="btn btn-secondary w-full whitespace-nowrap h-[42px]"
             >
               Clear Filters
             </button>
