@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [showEmployeeDetail, setShowEmployeeDetail] = useState(false);
   const [detailEmployee, setDetailEmployee] = useState(null);
-  const [sidebarOffset, setSidebarOffset] = useState(0);
+  const [sidebarOffset, setSidebarOffset] = useState(288);
 
   // Employee list filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,17 +57,7 @@ export default function AdminDashboard() {
     updateOffsetNow();
   }, [showAllEmployees, showActivityLogs, showEmployeeDetail]);
 
-  // Deterministic overlay left: use measured width or fall back to known widths
-  const computeOverlayLeft = () => {
-    const sidebar = document.querySelector('aside');
-    if (!sidebar) return 0;
-    const w = sidebar.offsetWidth;
-    if (w && w > 0) return w;
-    // fallback based on Tailwind widths: w-72 (18rem = 288px), w-20 (5rem = 80px)
-    if (sidebar.classList.contains('w-72')) return 288;
-    if (sidebar.classList.contains('w-20')) return 80;
-    return 288;
-  };
+  // Note: overlay left is driven by `sidebarOffset` state (measured via ResizeObserver)
 
   const activeEmployees = employees.filter(e => e.status === "active").length;
   const pendingActivities = activities.filter(a => a.status === "pending").length;
@@ -349,7 +339,7 @@ export default function AdminDashboard() {
       {showAllEmployees && (
         <div 
           className="fixed top-0 bottom-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade" 
-          style={{ left: `${computeOverlayLeft()}px`, right: 0 }}
+          style={{ left: `${sidebarOffset}px`, right: 0 }}
           onClick={() => setShowAllEmployees(false)}
         >
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
@@ -601,7 +591,7 @@ export default function AdminDashboard() {
       {showActivityLogs && (
         <div 
           className="fixed top-0 bottom-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade" 
-          style={{ left: `${computeOverlayLeft()}px`, right: 0 }}
+          style={{ left: `${sidebarOffset}px`, right: 0 }}
           onClick={() => setShowActivityLogs(false)}
         >
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
@@ -697,7 +687,7 @@ export default function AdminDashboard() {
       {showEmployeeDetail && detailEmployee && (
         <div 
           className="fixed top-0 bottom-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade"
-          style={{ left: `${computeOverlayLeft()}px`, right: 0 }}
+          style={{ left: `${sidebarOffset}px`, right: 0 }}
           onClick={() => setShowEmployeeDetail(false)}
         >
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
