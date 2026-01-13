@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [showEmployeeDetail, setShowEmployeeDetail] = useState(false);
   const [detailEmployee, setDetailEmployee] = useState(null);
   const [sidebarOffset, setSidebarOffset] = useState(288);
+  const [mounted, setMounted] = useState(false);
 
   // Employee list filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,6 +46,10 @@ export default function AdminDashboard() {
       observer.observe(sidebar);
       return () => observer.disconnect();
     }
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   // Recompute sidebar offset when any modal opens/closes to ensure overlays align
@@ -336,7 +341,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* All Employees Modal */}
-      {showAllEmployees && (
+      {mounted && showAllEmployees && (
         <div 
           className="fixed top-0 bottom-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade" 
           style={{ left: `${sidebarOffset}px`, right: 0 }}
@@ -588,7 +593,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Activity Logs Modal */}
-      {showActivityLogs && (
+      {mounted && showActivityLogs && (
         <div 
           className="fixed top-0 bottom-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade" 
           style={{ left: `${sidebarOffset}px`, right: 0 }}
@@ -684,7 +689,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Employee Detail Modal */}
-      {showEmployeeDetail && detailEmployee && (
+      {mounted && showEmployeeDetail && detailEmployee && (
         <div 
           className="fixed top-0 bottom-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade"
           style={{ left: `${sidebarOffset}px`, right: 0 }}
