@@ -32,12 +32,12 @@ function reducer(state, action) {
 
     case "APPROVE":
       newState = state.map((a) =>
-        a.id === action.payload.id
+        a.id === action.id
           ? { 
               ...a, 
               status: "approved", 
-              remarks: action.payload.remarks || "",
-              approvedBy: action.payload.approvedBy,
+              remarks: action.remarks || "",
+              approvedBy: action.approvedBy,
               updatedAt: new Date().toISOString() 
             }
           : a
@@ -47,12 +47,12 @@ function reducer(state, action) {
 
     case "REJECT":
       newState = state.map((a) =>
-        a.id === action.payload.id
+        a.id === action.id
           ? { 
               ...a, 
               status: "rejected", 
-              remarks: action.payload.remarks || "",
-              rejectedBy: action.payload.rejectedBy,
+              remarks: action.remarks || "",
+              rejectedBy: action.rejectedBy,
               updatedAt: new Date().toISOString() 
             }
           : a

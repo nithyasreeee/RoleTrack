@@ -7,13 +7,15 @@ const Ctx = createContext();
 function reducer(state, action) {
   let newState;
   switch (action.type) {
+    case "add":
     case "ADD":
       newState = [...state, { ...action.payload, id: uid(), status: "active", joinedDate: new Date().toISOString() }];
       save("employees", newState);
       return newState;
     
+    case "update":
     case "UPDATE":
-      newState = state.map(e => e.id === action.payload.id ? { ...e, ...action.payload } : e);
+      newState = state.map(e => e.id === action.id ? { ...e, ...action.payload } : e);
       save("employees", newState);
       return newState;
     
