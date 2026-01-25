@@ -30,18 +30,18 @@ export default function EmployeeList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">
             Employee Directory
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
             {data.length} {data.length === 1 ? 'employee' : 'employees'} found
           </p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="btn btn-primary flex items-center space-x-2"
+          className="btn btn-primary flex items-center space-x-2 w-full sm:w-auto"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           <span>Add Employee</span>
@@ -51,18 +51,19 @@ export default function EmployeeList() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex-1 relative">
-          <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
             className="input pl-10"
             placeholder="Search by name..."
             onChange={e => setSearch(e.target.value)}
+            value={search}
           />
         </div>
 
         <select 
-          className="input sm:w-48" 
+          className="input sm:w-56" 
           onChange={e => setSort(e.target.value)}
           value={sort}
         >
@@ -72,7 +73,7 @@ export default function EmployeeList() {
         </select>
       </div>
 
-      {/* Table */}
+      {/* Table - Mobile Responsive */}
       <div className="table-container">
         <table className="table">
           <thead>
@@ -87,10 +88,10 @@ export default function EmployeeList() {
               <tr key={e.id}>
                 <td data-label="Name">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold flex-shrink-0">
                       {e.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="font-medium">{e.name}</span>
+                    <span className="font-medium truncate">{e.name}</span>
                   </div>
                 </td>
                 <td data-label="Department">

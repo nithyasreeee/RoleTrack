@@ -8,9 +8,9 @@ export default function Pagination({ page, total, setPage }) {
   const canGoNext = page < pages - 1;
 
   return (
-    <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
       {/* Results info */}
-      <div className="text-sm text-gray-600 dark:text-gray-400">
+      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center sm:text-left">
         Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{page * pageSize + 1}</span> to{" "}
         <span className="font-semibold text-gray-900 dark:text-gray-100">
           {Math.min((page + 1) * pageSize, total)}
@@ -24,9 +24,10 @@ export default function Pagination({ page, total, setPage }) {
         <button
           onClick={() => setPage(page - 1)}
           disabled={!canGoPrev}
-          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+          aria-label="Previous page"
+          className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl text-sm font-medium transition-all touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center ${
             canGoPrev
-              ? "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
+              ? "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 shadow-sm hover:shadow-md"
               : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed border border-gray-200 dark:border-gray-700"
           }`}
         >
@@ -56,10 +57,12 @@ export default function Pagination({ page, total, setPage }) {
               <button
                 key={i}
                 onClick={() => setPage(i)}
-                className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${
+                aria-label={`Page ${i + 1}`}
+                aria-current={page === i ? "page" : undefined}
+                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center ${
                   page === i
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
+                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md hover:shadow-lg"
+                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 shadow-sm hover:shadow-md"
                 }`}
               >
                 {i + 1}
@@ -72,9 +75,10 @@ export default function Pagination({ page, total, setPage }) {
         <button
           onClick={() => setPage(page + 1)}
           disabled={!canGoNext}
-          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+          aria-label="Next page"
+          className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl text-sm font-medium transition-all touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center ${
             canGoNext
-              ? "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
+              ? "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 shadow-sm hover:shadow-md"
               : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed border border-gray-200 dark:border-gray-700"
           }`}
         >

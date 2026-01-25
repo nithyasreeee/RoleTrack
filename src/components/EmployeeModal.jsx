@@ -49,33 +49,34 @@ export default function EmployeeModal({ close, employee }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fade">
+    <div className="modal-overlay">
       <div 
         className="absolute inset-0" 
         onClick={close}
       ></div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md shadow-2xl relative z-10 animate-slide">
+      <div className="modal-content animate-slide-up">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center space-x-3 flex-1 min-w-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                 {employee ? 'Edit Employee' : 'Add Employee'}
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">
                 {employee ? 'Update employee information' : 'Create a new employee record'}
               </p>
             </div>
           </div>
           <button 
             onClick={close}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0 ml-2"
+            aria-label="Close modal"
           >
             <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -84,15 +85,15 @@ export default function EmployeeModal({ close, employee }) {
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-5">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        <div className="p-4 sm:p-6 space-y-5">
+          <div className="form-group">
+            <label className="form-label">
               Full Name *
             </label>
             <input
               type="text"
               placeholder="John Doe"
-              className={`input ${errors.name ? 'input-error' : ''}`}
+              className={`input ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : ''}`}
               value={name}
               onChange={e => {
                 setName(e.target.value);
@@ -100,8 +101,8 @@ export default function EmployeeModal({ close, employee }) {
               }}
             />
             {errors.name && (
-              <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <p className="form-error flex items-center gap-1">
+                <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {errors.name}
@@ -109,12 +110,12 @@ export default function EmployeeModal({ close, employee }) {
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          <div className="form-group">
+            <label className="form-label">
               Department *
             </label>
             <select
-              className={`input ${errors.dept ? 'input-error' : ''}`}
+              className={`input ${errors.dept ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : ''}`}
               value={dept}
               onChange={e => {
                 setDept(e.target.value);
@@ -130,8 +131,8 @@ export default function EmployeeModal({ close, employee }) {
               <option value="Operations">Operations</option>
             </select>
             {errors.dept && (
-              <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <p className="form-error flex items-center gap-1">
+                <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {errors.dept}
@@ -140,14 +141,14 @@ export default function EmployeeModal({ close, employee }) {
           </div>
 
           {employee && (
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <div className="form-group">
+              <label className="form-label">
                 Email *
               </label>
               <input
                 type="email"
                 placeholder="john.doe@company.com"
-                className={`input ${errors.email ? 'input-error' : ''}`}
+                className={`input ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : ''}`}
                 value={email}
                 onChange={e => {
                   setEmail(e.target.value);
@@ -155,8 +156,8 @@ export default function EmployeeModal({ close, employee }) {
                 }}
               />
               {errors.email && (
-                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <p className="form-error flex items-center gap-1">
+                  <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {errors.email}
@@ -167,18 +168,18 @@ export default function EmployeeModal({ close, employee }) {
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-b-2xl">
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 rounded-b-xl sm:rounded-b-2xl">
           <button 
             onClick={close}
-            className="btn btn-secondary"
+            className="btn btn-secondary w-full sm:w-auto"
           >
             Cancel
           </button>
           <button 
             onClick={save} 
-            className="btn btn-primary flex items-center space-x-2"
+            className="btn btn-primary flex items-center justify-center space-x-2 w-full sm:w-auto"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {employee ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               ) : (
