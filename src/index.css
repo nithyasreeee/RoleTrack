@@ -400,7 +400,7 @@ select.input {
 
 /* Modal Overlay */
 @utility modal-overlay {
-  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-50 
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] 
          flex items-center justify-center p-4
          animate-fade cursor-default;
 }
