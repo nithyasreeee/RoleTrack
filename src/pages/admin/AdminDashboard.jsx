@@ -211,6 +211,7 @@ export default function AdminDashboard() {
 
   return (
     <Layout>
+      <>
       <div className="space-y-4 sm:space-y-6 animate-fade">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -340,6 +341,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* Modals - Rendered outside content wrapper to avoid sidebar overlap */}
       {/* All Employees Modal */}
       {mounted && showAllEmployees && (
         <div 
@@ -438,10 +440,10 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="p-6 overflow-y-auto flex-1">
+            <div className="p-6 overflow-y-auto flex-1 overflow-x-auto">
               {paginatedEmployees.length > 0 ? (
                 <>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 w-full min-w-[320px]">
                     {paginatedEmployees.map((emp) => {
                       const empActivities = activities.filter(a => a.employeeId === emp.id);
                       return (
@@ -832,6 +834,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+      </>
     </Layout>
   );
 }
