@@ -211,8 +211,23 @@ export default function AdminDashboard() {
 
   return (
     <Layout>
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
+        {/* Animated blobs - purple/pink theme */}
+        <div className="absolute -top-20 -right-20 w-[400px] h-[400px] bg-purple-400/15 rounded-full blur-3xl animate-blob"></div>
+        <div className="absolute top-1/3 left-1/4 w-[350px] h-[350px] bg-pink-400/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-20 right-1/3 w-[400px] h-[400px] bg-indigo-400/15 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+        
+        {/* Floating shapes */}
+        <div className="absolute top-32 right-32 w-24 h-24 border-2 border-purple-300/20 dark:border-purple-500/20 rounded-2xl rotate-45 animate-float"></div>
+        <div className="absolute bottom-40 left-40 w-20 h-20 border-2 border-pink-300/20 dark:border-pink-500/20 rounded-full animate-float animation-delay-2000"></div>
+        <div className="absolute top-1/2 right-1/4 w-16 h-16 border-2 border-indigo-300/20 dark:border-indigo-500/20 rounded-xl -rotate-12 animate-float animation-delay-3000"></div>
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 animate-pulse-slow"></div>
+      </div>
       <>
-      <div className="space-y-4 sm:space-y-6 animate-fade">
+      <div className="space-y-4 sm:space-y-6 animate-fade relative" style={{ zIndex: 1 }}>
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="w-full sm:w-auto">

@@ -16,37 +16,105 @@ export default function Login() {
     <div className="h-screen bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 dark:from-gray-950 dark:via-indigo-950 dark:to-purple-950 relative overflow-hidden">
       {/* Animated Geometric Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Animated circles */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-blob"></div>
-        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-pink-300/10 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+        {/* Large animated circles with higher opacity */}
+        <div className="absolute -top-20 -left-20 w-[500px] h-[500px] bg-purple-400/20 rounded-full blur-3xl animate-blob"></div>
+        <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-pink-400/25 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-20 left-1/3 w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+        <div className="absolute top-1/2 right-1/3 w-[350px] h-[350px] bg-fuchsia-400/15 rounded-full blur-3xl animate-blob animation-delay-3000"></div>
         
-        {/* Floating shapes */}
-        <div className="absolute top-20 right-20 w-20 h-20 border-2 border-white/20 rounded-2xl rotate-45 animate-float"></div>
-        <div className="absolute bottom-32 left-32 w-16 h-16 border-2 border-white/15 rounded-full animate-float animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-20 w-24 h-24 border-2 border-white/10 rounded-3xl -rotate-12 animate-float animation-delay-3000"></div>
+        {/* Larger floating shapes with more visibility */}
+        <div className="absolute top-20 right-20 w-32 h-32 border-3 border-white/40 rounded-2xl rotate-45 animate-float shadow-lg shadow-white/20"></div>
+        <div className="absolute bottom-32 left-32 w-24 h-24 border-3 border-white/35 rounded-full animate-float animation-delay-2000 shadow-lg shadow-white/20"></div>
+        <div className="absolute top-1/2 left-20 w-28 h-28 border-3 border-white/30 rounded-3xl -rotate-12 animate-float animation-delay-3000 shadow-lg shadow-white/20"></div>
+        <div className="absolute bottom-20 right-1/3 w-20 h-20 border-3 border-white/35 rounded-xl rotate-12 animate-float animation-delay-1000 shadow-lg shadow-white/20"></div>
+        <div className="absolute top-40 left-1/2 w-16 h-16 bg-white/15 rounded-lg rotate-45 animate-float animation-delay-3500 shadow-xl"></div>
         
-        {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+        {/* Animated gradient mesh overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-transparent to-pink-500/10 animate-pulse-slow"></div>
+        
+        {/* Moving particles */}
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/60 rounded-full animate-float shadow-lg shadow-white/50"></div>
+        <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-white/60 rounded-full animate-float animation-delay-1000 shadow-lg shadow-white/50"></div>
+        <div className="absolute top-1/2 right-1/3 w-2 h-2 bg-white/60 rounded-full animate-float animation-delay-2000 shadow-lg shadow-white/50"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-white/60 rounded-full animate-float animation-delay-3000 shadow-lg shadow-white/50"></div>
+        <div className="absolute top-1/3 left-1/2 w-1.5 h-1.5 bg-white/70 rounded-full animate-float animation-delay-1500 shadow-md shadow-white/40"></div>
+        <div className="absolute bottom-1/4 right-1/2 w-1.5 h-1.5 bg-white/70 rounded-full animate-float animation-delay-2500 shadow-md shadow-white/40"></div>
+        
+        {/* Animated diagonal lines */}
+        <div className="absolute top-0 left-1/4 w-0.5 h-32 bg-gradient-to-b from-transparent via-white/20 to-transparent animate-float"></div>
+        <div className="absolute top-1/3 right-1/3 w-0.5 h-24 bg-gradient-to-b from-transparent via-white/15 to-transparent animate-float animation-delay-2000"></div>
+        <div className="absolute bottom-1/4 left-1/2 w-0.5 h-28 bg-gradient-to-b from-transparent via-white/20 to-transparent animate-float animation-delay-3000"></div>
+        
+        {/* Pulsing rings */}
+        <div className="absolute top-1/3 right-1/4 w-40 h-40 border border-white/10 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-32 h-32 border border-white/15 rounded-full animate-pulse animation-delay-2000"></div>
+        
+        {/* Star shapes */}
+        <div className="absolute top-1/4 right-1/3 w-3 h-3">
+          <div className="absolute inset-0 bg-white/40 rotate-0 animate-pulse"></div>
+          <div className="absolute inset-0 bg-white/40 rotate-90 animate-pulse animation-delay-1000"></div>
+        </div>
+        <div className="absolute bottom-1/3 left-2/3 w-2 h-2">
+          <div className="absolute inset-0 bg-white/50 rotate-0 animate-pulse animation-delay-2000"></div>
+          <div className="absolute inset-0 bg-white/50 rotate-90 animate-pulse animation-delay-3000"></div>
+        </div>
+        
+        {/* Additional sparkle particles */}
+        <div className="absolute top-1/5 left-1/3 w-1 h-1 bg-white/80 rounded-full animate-pulse shadow-sm shadow-white/60"></div>
+        <div className="absolute top-2/3 right-1/5 w-1 h-1 bg-white/80 rounded-full animate-pulse animation-delay-1000 shadow-sm shadow-white/60"></div>
+        <div className="absolute bottom-1/5 left-1/5 w-1 h-1 bg-white/80 rounded-full animate-pulse animation-delay-2000 shadow-sm shadow-white/60"></div>
+        <div className="absolute top-1/2 left-3/4 w-1 h-1 bg-white/80 rounded-full animate-pulse animation-delay-3000 shadow-sm shadow-white/60"></div>
+        
+        {/* Grid pattern with subtle pulse */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px] animate-pulse-slow"></div>
       </div>
 
       <div className="relative h-screen flex overflow-hidden">
         {/* Left Side - Enhanced Hero Section */}
         <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-violet-700 via-purple-700 to-fuchsia-700 p-8 flex-col justify-between relative overflow-hidden">
-          {/* Animated waves */}
-          <div className="absolute inset-0 opacity-10">
+          {/* Animated waves - more visible */}
+          <div className="absolute inset-0 opacity-30">
             <svg className="absolute bottom-0 left-0 w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-              <path fill="currentColor" fillOpacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" className="animate-wave"></path>
+              <path fill="currentColor" fillOpacity="0.8" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" className="animate-wave"></path>
+            </svg>
+            <svg className="absolute bottom-0 left-0 w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+              <path fill="currentColor" fillOpacity="0.5" d="M0,160L48,144C96,128,192,96,288,101.3C384,107,480,149,576,165.3C672,181,768,171,864,154.7C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" className="animate-wave" style={{ animationDelay: '1s', animationDuration: '4s' }}></path>
             </svg>
           </div>
           
-          {/* Decorative illustrations */}
-          <div className="absolute inset-0 opacity-20 pointer-events-none">
-            <div className="absolute top-32 right-10 w-32 h-32">
+          {/* Decorative illustrations - more visible and animated */}
+          <div className="absolute inset-0 opacity-40 pointer-events-none">
+            <div className="absolute top-32 right-10 w-40 h-40">
               <svg viewBox="0 0 100 100" className="animate-spin-slow">
-                <circle cx="50" cy="50" r="40" stroke="white" strokeWidth="2" fill="none" />
-                <circle cx="50" cy="50" r="30" stroke="white" strokeWidth="2" fill="none" />
-                <circle cx="50" cy="50" r="20" stroke="white" strokeWidth="2" fill="none" />
+                <circle cx="50" cy="50" r="45" stroke="white" strokeWidth="1.5" fill="none" opacity="0.3" />
+                <circle cx="50" cy="50" r="35" stroke="white" strokeWidth="2" fill="none" opacity="0.5" />
+                <circle cx="50" cy="50" r="25" stroke="white" strokeWidth="2.5" fill="none" opacity="0.7" />
+                <circle cx="50" cy="50" r="15" stroke="white" strokeWidth="3" fill="none" opacity="0.9" />
+              </svg>
+            </div>
+            <div className="absolute bottom-40 left-16 w-32 h-32">
+              <svg viewBox="0 0 100 100" className="animate-spin-slow" style={{ animationDirection: 'reverse', animationDuration: '25s' }}>
+                <rect x="20" y="20" width="60" height="60" stroke="white" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(45 50 50)" />
+                <rect x="30" y="30" width="40" height="40" stroke="white" strokeWidth="2" fill="none" opacity="0.6" transform="rotate(45 50 50)" />
+              </svg>
+            </div>
+            {/* Floating triangle */}
+            <div className="absolute top-1/2 left-1/4 w-24 h-24 animate-float animation-delay-1000">
+              <svg viewBox="0 0 100 100">
+                <polygon points="50,10 90,80 10,80" stroke="white" strokeWidth="2" fill="none" opacity="0.5" />
+              </svg>
+            </div>
+            {/* Hexagon shape */}
+            <div className="absolute bottom-1/4 right-1/4 w-28 h-28 animate-float animation-delay-3000">
+              <svg viewBox="0 0 100 100">
+                <polygon points="50,5 93.3,25 93.3,75 50,95 6.7,75 6.7,25" stroke="white" strokeWidth="2" fill="none" opacity="0.4" />
+              </svg>
+            </div>
+            {/* Plus sign */}
+            <div className="absolute top-2/3 right-1/3 w-16 h-16 animate-float animation-delay-2000">
+              <svg viewBox="0 0 100 100">
+                <line x1="50" y1="20" x2="50" y2="80" stroke="white" strokeWidth="3" opacity="0.5" />
+                <line x1="20" y1="50" x2="80" y2="50" stroke="white" strokeWidth="3" opacity="0.5" />
               </svg>
             </div>
           </div>

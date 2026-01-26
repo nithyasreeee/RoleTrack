@@ -38,7 +38,22 @@ export default function EmployeeDashboard() {
 
   return (
     <Layout>
-      <div className="space-y-6 animate-fade">
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
+        {/* Animated blobs - blue/cyan theme */}
+        <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] bg-blue-400/15 rounded-full blur-3xl animate-blob"></div>
+        <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-cyan-400/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-20 right-1/3 w-[400px] h-[400px] bg-indigo-400/15 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+        
+        {/* Floating shapes */}
+        <div className="absolute top-24 right-24 w-24 h-24 border-2 border-blue-300/20 dark:border-blue-500/20 rounded-2xl rotate-45 animate-float"></div>
+        <div className="absolute bottom-48 left-32 w-20 h-20 border-2 border-cyan-300/20 dark:border-cyan-500/20 rounded-full animate-float animation-delay-2000"></div>
+        <div className="absolute top-1/3 left-1/4 w-16 h-16 border-2 border-indigo-300/20 dark:border-indigo-500/20 rounded-xl -rotate-12 animate-float animation-delay-3000"></div>
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-bl from-blue-500/5 via-transparent to-cyan-500/5 animate-pulse-slow"></div>
+      </div>
+      <div className="space-y-6 animate-fade relative" style={{ zIndex: 1 }}>
         {/* Welcome Card */}
         <div className="card bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-200 dark:border-blue-800">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">

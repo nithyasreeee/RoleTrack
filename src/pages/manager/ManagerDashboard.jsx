@@ -25,7 +25,22 @@ export default function ManagerDashboard() {
 
   return (
     <Layout>
-      <div className="space-y-6 animate-fade">
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
+        {/* Animated blobs - indigo/blue theme */}
+        <div className="absolute -top-20 left-1/4 w-[400px] h-[400px] bg-indigo-400/15 rounded-full blur-3xl animate-blob"></div>
+        <div className="absolute top-1/2 -right-20 w-[350px] h-[350px] bg-blue-400/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-20 left-1/3 w-[400px] h-[400px] bg-purple-400/15 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+        
+        {/* Floating shapes */}
+        <div className="absolute top-40 left-32 w-24 h-24 border-2 border-indigo-300/20 dark:border-indigo-500/20 rounded-2xl rotate-45 animate-float"></div>
+        <div className="absolute bottom-32 right-40 w-20 h-20 border-2 border-blue-300/20 dark:border-blue-500/20 rounded-full animate-float animation-delay-2000"></div>
+        <div className="absolute top-1/3 right-1/4 w-16 h-16 border-2 border-purple-300/20 dark:border-purple-500/20 rounded-xl rotate-12 animate-float animation-delay-3000"></div>
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/5 via-transparent to-blue-500/5 animate-pulse-slow"></div>
+      </div>
+      <div className="space-y-6 animate-fade relative" style={{ zIndex: 1 }}>
         {/* Header */}
         <div className="card bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-2 border-indigo-200 dark:border-indigo-800">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
