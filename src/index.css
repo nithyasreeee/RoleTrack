@@ -402,7 +402,7 @@ select.input {
 @utility modal-overlay {
   @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-50 
          flex items-center justify-center p-4
-         animate-fade;
+         animate-fade cursor-default;
 }
 
 /* Modal Content */
@@ -410,7 +410,7 @@ select.input {
   @apply bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl 
          shadow-2xl border border-gray-200 dark:border-gray-700
          w-full max-w-lg sm:max-w-2xl max-h-[90vh] overflow-y-auto
-         animate-slide-up;
+         animate-slide-up pointer-events-auto;
 }
 
 /* Form Group */

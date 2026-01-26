@@ -686,7 +686,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Employee Add/Edit Modal */}
-      {showEmployeeModal && (
+      {mounted && showEmployeeModal && (
         <EmployeeModal 
           close={() => {
             setShowEmployeeModal(false);

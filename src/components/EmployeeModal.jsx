@@ -49,13 +49,10 @@ export default function EmployeeModal({ close, employee }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div 
-        className="absolute inset-0" 
-        onClick={close}
-      ></div>
-
-      <div className="modal-content animate-slide-up">
+    <div className="modal-overlay" onMouseDown={(e) => {
+      if (e.target === e.currentTarget) close();
+    }}>
+      <div className="modal-content relative">
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
@@ -99,6 +96,8 @@ export default function EmployeeModal({ close, employee }) {
                 setName(e.target.value);
                 setErrors(prev => ({ ...prev, name: '' }));
               }}
+              autoFocus
+              autoComplete="name"
             />
             {errors.name && (
               <p className="form-error flex items-center gap-1">
