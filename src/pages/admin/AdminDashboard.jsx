@@ -4,6 +4,7 @@ import StatsCard from "../../components/StatsCard";
 import { useEmployees } from "../../context/EmployeeContext";
 import { useActivities } from "../../context/ActivityContext";
 import { useMemo, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import EmployeeModal from "../../components/EmployeeModal";
 
 export default function AdminDashboard() {
@@ -210,6 +211,7 @@ export default function AdminDashboard() {
   }, [searchQuery, statusFilter, departmentFilter, sortBy, sortOrder]);
 
   return (
+    <>
     <Layout>
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
@@ -355,12 +357,13 @@ export default function AdminDashboard() {
           </button>
         </div>
       </div>
-
-      {/* Modals - Rendered outside content wrapper to avoid sidebar overlap */}
+      </>
+    </Layout>
+      {/* Modals - Rendered outside Layout using React Portal to avoid sidebar overlap */}
       {/* All Employees Modal */}
-      {mounted && showAllEmployees && (
+      {mounted && showAllEmployees && createPortal(
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-2 sm:p-4 animate-fade" 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-2 sm:p-4 animate-fade" 
           onClick={() => setShowAllEmployees(false)}
         >
           <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
@@ -611,13 +614,14 @@ export default function AdminDashboard() {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Activity Logs Modal */}
-      {mounted && showActivityLogs && (
+      {mounted && showActivityLogs && createPortal(
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-2 sm:p-4 animate-fade" 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-2 sm:p-4 animate-fade" 
           onClick={() => setShowActivityLogs(false)}
         >
           <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
@@ -699,7 +703,8 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Employee Add/Edit Modal */}
@@ -714,9 +719,9 @@ export default function AdminDashboard() {
       )}
 
       {/* Employee Detail Modal */}
-      {mounted && showEmployeeDetail && detailEmployee && (
+      {mounted && showEmployeeDetail && detailEmployee && createPortal(
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-2 sm:p-4 animate-fade"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-2 sm:p-4 animate-fade"
           onClick={() => setShowEmployeeDetail(false)}
         >
           <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
@@ -847,9 +852,9 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
-      </>
-    </Layout>
+    </>
   );
 }

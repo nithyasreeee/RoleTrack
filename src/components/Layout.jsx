@@ -49,7 +49,7 @@ export default function Layout({ children }) {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-200 dark:border-gray-800 shadow-2xl transition-all duration-300 z-[50] overflow-y-auto ${
+      <aside className={`fixed left-0 top-0 h-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-200 dark:border-gray-800 shadow-2xl transition-all duration-300 z-40 overflow-y-auto ${
         isMobile 
           ? (open ? 'translate-x-0 w-72' : '-translate-x-full w-72')
           : (open ? 'w-72' : 'w-20')
@@ -164,7 +164,7 @@ export default function Layout({ children }) {
           onTouchEnd={(e) => {
             e.currentTarget.style.transform = 'scale(1)';
           }}
-          className="fixed bottom-6 right-6 z-[60] p-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 backdrop-blur-xl rounded-full shadow-2xl hover:shadow-3xl transition-all active:scale-95 touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center animate-fade"
+          className="fixed bottom-6 right-6 z-40 p-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 backdrop-blur-xl rounded-full shadow-2xl hover:shadow-3xl transition-all active:scale-95 touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center animate-fade"
           aria-label="Open sidebar"
           style={{ WebkitTapHighlightColor: 'transparent' }}
         >

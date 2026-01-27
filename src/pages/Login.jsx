@@ -134,59 +134,59 @@ export default function Login() {
       </div>
 
       {/* Main Container */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-between px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-12 lg:py-12">
-        <div className="max-w-7xl w-full mx-auto flex flex-col items-center justify-center space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-8">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-between px-3 py-4 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-12 lg:py-12">
+        <div className="max-w-7xl w-full mx-auto flex flex-col items-center justify-center space-y-3 sm:space-y-5 md:space-y-6 lg:space-y-8">
         {/* Hero Section - Full Width Centered */}
         <div className="text-center w-full">
           {/* Logo & Heading */}
-          <div className="mb-4 sm:mb-5 md:mb-6 lg:mb-8">
-            <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4 animate-slide-down">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-white rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center shadow-2xl shadow-white/50 transform hover:rotate-12 transition-all duration-300">
-                <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mb-3 sm:mb-5 md:mb-6 lg:mb-8">
+            <div className="flex items-center justify-center space-x-1.5 sm:space-x-3 mb-2 sm:mb-4 animate-slide-down">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-white rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center shadow-2xl shadow-white/50 transform hover:rotate-12 transition-all duration-300">
+                <svg className="w-5 h-5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight drop-shadow-lg">RoleTrack</span>
+              <span className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-tight drop-shadow-lg">RoleTrack</span>
             </div>
 
-            <div className="space-y-2 sm:space-y-3 md:space-y-4">
-              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-extrabold text-white leading-tight tracking-tight drop-shadow-2xl px-4">
-                Modern Employee
+            <div className="space-y-1.5 sm:space-y-3 md:space-y-4">
+              <h1 className="text-base sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-extrabold text-white leading-tight tracking-tight drop-shadow-2xl px-3 sm:px-4">
+                Transform Your Workplace with
                 <br />
-                <span className="bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">Management System</span>
+                <span className="bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">Smart Employee Management</span>
               </h1>
-              <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/90 leading-relaxed font-medium max-w-3xl mx-auto px-4">
-                Streamline your workforce operations with powerful tools for activity tracking, team management, and performance monitoring.
+              <p className="text-[11px] sm:text-sm md:text-base lg:text-lg text-white/90 leading-relaxed font-medium max-w-4xl mx-auto px-3 sm:px-4">
+                Empower your organization with intelligent workforce solutions. From real-time analytics and seamless activity tracking to comprehensive team management—everything you need to boost productivity and drive success.
               </p>
 
               {/* Features */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4 pt-3 sm:pt-4 md:pt-5 px-4 max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4 pt-2 sm:pt-4 md:pt-5 px-2 sm:px-4 max-w-5xl mx-auto">
                 {[
                   { 
                     icon: <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
                     title: "Real-time Analytics", 
-                    desc: "Track team performance with live dashboards", 
+                    desc: "Monitor team performance with interactive dashboards, detailed reports, and actionable insights at your fingertips.", 
                     gradient: "from-cyan-400 to-blue-500"
                   },
                   { 
                     icon: <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
                     title: "Activity Management", 
-                    desc: "Efficient approval workflows for managers", 
+                    desc: "Streamline approval workflows, track project progress, and manage tasks efficiently with automated notifications.", 
                     gradient: "from-emerald-400 to-green-500"
                   },
                   { 
                     icon: <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>,
                     title: "Employee Directory", 
-                    desc: "Centralized team information & status", 
+                    desc: "Access complete team information, track employee status, manage profiles, and maintain organizational structure.", 
                     gradient: "from-rose-400 to-pink-500"
                   }
                 ].map((feature, i) => (
-                  <div key={i} className="flex flex-col items-center text-center bg-white/10 backdrop-blur-lg p-3 sm:p-4 rounded-lg sm:rounded-xl border border-white/10 hover:bg-white/20 hover:border-white/30 hover:scale-105 transition-all duration-300 animate-slide" style={{ animationDelay: `${i * 100}ms` }}>
-                    <div className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br ${feature.gradient} rounded-lg sm:rounded-xl flex items-center justify-center shadow-xl mb-2`}>
+                  <div key={i} className="flex flex-col items-center text-center bg-white/10 backdrop-blur-lg p-2.5 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-white/10 hover:bg-white/20 hover:border-white/30 hover:scale-105 transition-all duration-300 animate-slide" style={{ animationDelay: `${i * 100}ms` }}>
+                    <div className={`w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br ${feature.gradient} rounded-lg sm:rounded-xl flex items-center justify-center shadow-xl mb-1.5 sm:mb-3`}>
                       <div className="text-white">{feature.icon}</div>
                     </div>
-                    <h3 className="font-bold text-white text-xs sm:text-sm md:text-base mb-1 drop-shadow">{feature.title}</h3>
-                    <p className="text-[10px] sm:text-xs text-white/80 font-medium leading-relaxed">{feature.desc}</p>
+                    <h3 className="font-bold text-white text-xs sm:text-base md:text-lg mb-1 sm:mb-2 drop-shadow">{feature.title}</h3>
+                    <p className="text-[10px] sm:text-sm text-white/80 font-medium leading-relaxed">{feature.desc}</p>
                   </div>
                 ))}
               </div>
@@ -195,10 +195,10 @@ export default function Login() {
         </div>
 
         {/* Sign In Button - Fixed at Bottom */}
-        <div className="w-full flex justify-center pb-2 sm:pb-4">
+        <div className="w-full flex justify-center pb-1.5 sm:pb-4">
           <button
             onClick={() => setShowLoginModal(true)}
-            className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700 text-white font-bold text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-lg sm:rounded-xl transition-all shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 hover:scale-105 inline-flex items-center justify-center space-x-2 animate-pulse min-w-[130px] sm:min-w-[150px]"
+            className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700 text-white font-bold text-xs sm:text-base md:text-lg px-5 sm:px-8 md:px-10 py-2 sm:py-3 md:py-4 rounded-lg sm:rounded-xl transition-all shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 hover:scale-105 inline-flex items-center justify-center space-x-1.5 sm:space-x-2 animate-pulse min-w-[120px] sm:min-w-[150px]"
           >
             <span>Sign In</span>
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
