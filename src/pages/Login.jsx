@@ -56,7 +56,9 @@ export default function Login() {
       // Check employee credentials
       const employee = employees.find(emp => 
         emp.status === "active" && 
-        (emp.email === identifier || emp.id === identifier)
+        (emp.email === identifier || 
+         emp.id === identifier || 
+         emp.name.toLowerCase() === identifier.toLowerCase())
       );
 
       if (employee && password === "emp123") {
