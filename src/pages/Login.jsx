@@ -1,18 +1,95 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useEmployees } from "../context/EmployeeContext";
 
 export default function Login() {
-  const [role, setRole] = useState("admin");
+  const [role, setRole] = useState("");
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { login } = useAuth();
+  const { employees } = useEmployees();
   const nav = useNavigate();
 
+  // Get active employees for employee role
+  const activeEmployees = employees.filter(emp => emp.status === "active");
+
+  const handleRoleSelect = (selectedRole) => {
+    setRole(selectedRole);
+    setUsername("");
+    setPassword("");
+    setSelectedEmployeeId("");
+    setError("");
+    setShowAuthModal(true);
+  };
+
+  const closeModal = () => {
+    setShowAuthModal(false);
+    setError("");
+  };
+
+  // Authentication credentials (in production, this would be handled by backend)
+  const credentials = {
+    admin: { username: "admin", password: "admin123", email: "admin@roletrack.com" },
+    manager: { username: "manager", password: "manager123", email: "manager@roletrack.com" },
+  };
+
   const submit = () => {
-    login(role, null);
-    nav("/" + role);
+    setError("");
+
+    // Validate inputs based on role
+    if (role === "employee") {
+      // For employees, only validate password and selection
+      if (!password.trim()) {
+        setError("Please enter password");
+        return;
+      }
+      if (!selectedEmployeeId) {
+        setError("Please select an employee account");
+        return;
+      }
+      
+      const employee = employees.find(emp => emp.id === selectedEmployeeId);
+      if (!employee) {
+        setError("Selected employee not found");
+        return;
+      }
+
+      const employeePassword = "emp123"; // Default password for all employees
+
+      if (password !== employeePassword) {
+        setError(`Invalid password for ${employee.name}.`);
+        return;
+      }
+
+      login(role, employee);
+      nav("/" + role);
+    } else {
+      // For admin and manager, validate username and password
+      if (!username.trim() || !password.trim()) {
+        setError("Please enter both username/email and password");
+        return;
+      }
+
+      // Check credentials for admin/manager - allow both username and email
+      const roleCredentials = credentials[role];
+      const isValidUsername = username === roleCredentials.username || username === roleCredentials.email;
+      const isValidPassword = password === roleCredentials.password;
+      
+      if (!isValidUsername || !isValidPassword) {
+        setError(`Invalid credentials for ${role.charAt(0).toUpperCase() + role.slice(1)}. Please check your username/email and password.`);
+        return;
+      }
+      login(role, null);
+      nav("/" + role);
+    }
   };
 
   return (
+    <>
     <div className="h-screen bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 dark:from-gray-950 dark:via-indigo-950 dark:to-purple-950 relative overflow-hidden">
       {/* Animated Geometric Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -222,6 +299,18 @@ export default function Login() {
               </div>
 
               <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="space-y-5">
+                {/* Error Message */}
+                {error && (
+                  <div className="animate-slide-down p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-xl">
+                    <div className="flex items-center space-x-2">
+                      <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-sm text-red-800 dark:text-red-200 font-medium">{error}</p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Role Selection */}
                 <div className="animate-slide-down space-y-3" style={{ animationDelay: '100ms' }}>
                   <label className="block text-base font-bold mb-4">
@@ -231,15 +320,11 @@ export default function Login() {
                   </label>
 
                   {/* Admin Option */}
-                  <label className="flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-violet-500 hover:bg-violet-50/50 dark:hover:bg-violet-900/20 transition-all group shadow-sm hover:shadow-lg hover:shadow-violet-500/20">
-                    <input
-                      type="radio"
-                      name="role"
-                      value="admin"
-                      checked={role === 'admin'}
-                      onChange={(e) => setRole(e.target.value)}
-                      className="w-5 h-5 text-violet-600 focus:ring-violet-500"
-                    />
+                  <button
+                    type="button"
+                    onClick={() => handleRoleSelect('admin')}
+                    className="w-full flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-violet-500 hover:bg-violet-50/50 dark:hover:bg-violet-900/20 transition-all group shadow-sm hover:shadow-lg hover:shadow-violet-500/20"
+                  >
                     <div className="flex items-center space-x-3 flex-1">
                       <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-purple-500/50 transition-transform">
                         <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,18 +333,17 @@ export default function Login() {
                       </div>
                       <span className="text-lg font-bold text-gray-900 dark:text-white">Admin</span>
                     </div>
-                  </label>
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
 
                   {/* Manager Option */}
-                  <label className="flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all group shadow-sm hover:shadow-lg hover:shadow-blue-500/20">
-                    <input
-                      type="radio"
-                      name="role"
-                      value="manager"
-                      checked={role === 'manager'}
-                      onChange={(e) => setRole(e.target.value)}
-                      className="w-5 h-5 text-indigo-600 focus:ring-indigo-500"
-                    />
+                  <button
+                    type="button"
+                    onClick={() => handleRoleSelect('manager')}
+                    className="w-full flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all group shadow-sm hover:shadow-lg hover:shadow-blue-500/20"
+                  >
                     <div className="flex items-center space-x-3 flex-1">
                       <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-500/50 transition-transform">
                         <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,18 +352,17 @@ export default function Login() {
                       </div>
                       <span className="text-lg font-bold text-gray-900 dark:text-white">Manager</span>
                     </div>
-                  </label>
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
 
                   {/* Employee Option */}
-                  <label className="flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-green-500 hover:bg-green-50/50 dark:hover:bg-green-900/20 transition-all group shadow-sm hover:shadow-lg hover:shadow-green-500/20">
-                    <input
-                      type="radio"
-                      name="role"
-                      value="employee"
-                      checked={role === 'employee'}
-                      onChange={(e) => setRole(e.target.value)}
-                      className="w-5 h-5 text-indigo-600 focus:ring-indigo-500"
-                    />
+                  <button
+                    type="button"
+                    onClick={() => handleRoleSelect('employee')}
+                    className="w-full flex items-center space-x-4 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-green-500 hover:bg-green-50/50 dark:hover:bg-green-900/20 transition-all group shadow-sm hover:shadow-lg hover:shadow-green-500/20"
+                  >
                     <div className="flex items-center space-x-3 flex-1">
                       <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-green-500/50 transition-transform">
                         <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,23 +371,11 @@ export default function Login() {
                       </div>
                       <span className="text-lg font-bold text-gray-900 dark:text-white">Employee</span>
                     </div>
-                  </label>
-                </div>
-
-                {/* Enhanced Login Button */}
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white py-4 rounded-2xl hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700 transition-all shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/50 font-bold text-lg transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 relative overflow-hidden group animate-slide-down"
-                  style={{ animationDelay: '200ms' }}
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-                  <span className="relative flex items-center justify-center space-x-3">
-                    <span>Sign In</span>
-                    <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                  </span>
-                </button>
+                  </button>
+                </div>
               </form>
             </div>
 
@@ -319,8 +390,174 @@ export default function Login() {
               </div>
             </div>
           </div>
+
+          {/* Authentication Modal */}
+          {showAuthModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade" onClick={closeModal}>
+                  {/* Backdrop */}
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+                  
+                  {/* Modal Card */}
+                  <div 
+                    className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale border-2 border-gray-200 dark:border-gray-700"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Close Button */}
+                    <button
+                      onClick={closeModal}
+                      className="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all"
+                    >
+                      <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+
+                    {/* Modal Header */}
+                    <div className="text-center mb-6">
+                      <div className="flex justify-center mb-4">
+                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl ${
+                          role === 'admin' ? 'bg-gradient-to-br from-purple-500 to-pink-600' :
+                          role === 'manager' ? 'bg-gradient-to-br from-indigo-500 to-blue-600' :
+                          'bg-gradient-to-br from-green-500 to-emerald-600'
+                        }`}>
+                          <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {role === 'admin' && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />}
+                            {role === 'manager' && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />}
+                            {role === 'employee' && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />}
+                          </svg>
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white capitalize">{role} Login</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Enter your credentials to continue</p>
+                    </div>
+
+                    {/* Error Message */}
+                    {error && (
+                      <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-xl">
+                        <div className="flex items-center space-x-2">
+                          <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <p className="text-sm text-red-800 dark:text-red-200 font-medium">{error}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="space-y-4">
+                      {/* Employee Selection */}
+                      {role === 'employee' && (
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            Select Employee
+                          </label>
+                          {activeEmployees.length > 0 ? (
+                            <select
+                              value={selectedEmployeeId}
+                              onChange={(e) => setSelectedEmployeeId(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                              required
+                            >
+                              <option value="">Choose your account...</option>
+                              {activeEmployees.map(emp => (
+                                <option key={emp.id} value={emp.id}>
+                                  {emp.name} - {emp.role}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl">
+                              <p className="text-sm text-yellow-800 dark:text-yellow-200">No employees available</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Username/Email Field - Only for Admin and Manager */}
+                      {role !== 'employee' && (
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            Username or Email
+                          </label>
+                          <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter username or email"
+                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                            required
+                          />
+                        </div>
+                      )}
+
+                      {/* Password Field */}
+                      <div>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Enter password"
+                          className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                          required
+                        />
+                      </div>
+
+                      {/* Credentials Info */}
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl">
+                        <div className="flex items-start space-x-2">
+                          <svg className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <div className="text-xs text-blue-700 dark:text-blue-300">
+                            {role === 'admin' && (
+                              <>
+                                <p className="font-semibold mb-1">Demo Credentials:</p>
+                                <p>Username: <code className="bg-blue-100 dark:bg-blue-900/40 px-1 rounded">admin</code></p>
+                                <p>Password: <code className="bg-blue-100 dark:bg-blue-900/40 px-1 rounded">admin123</code></p>
+                              </>
+                            )}
+                            {role === 'manager' && (
+                              <>
+                                <p className="font-semibold mb-1">Demo Credentials:</p>
+                                <p>Username: <code className="bg-blue-100 dark:bg-blue-900/40 px-1 rounded">manager</code></p>
+                                <p>Password: <code className="bg-blue-100 dark:bg-blue-900/40 px-1 rounded">manager123</code></p>
+                              </>
+                            )}
+                            {role === 'employee' && (
+                              <>
+                                <p className="font-semibold mb-1">Employee Password:</p>
+                                <p>Password: <code className="bg-blue-100 dark:bg-blue-900/40 px-1 rounded">emp123</code></p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Submit Buttons */}
+                      <div className="flex space-x-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={closeModal}
+                          className="flex-1 px-4 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="flex-1 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white py-3 rounded-xl hover:from-violet-700 hover:via-purple-700 hover:to-fuchsia-700 transition-all shadow-lg font-bold"
+                        >
+                          Sign In
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
         </div>
       </div>
     </div>
+    </>
   );
 }

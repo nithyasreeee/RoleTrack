@@ -10,22 +10,22 @@ export default function EmployeeDashboard() {
   const [showProfile, setShowProfile] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  const myActivities = activities.filter(a => a.employeeId === user.role);
+  const myActivities = activities.filter(a => a.employeeId === (user.employeeId || user.role));
   const pendingCount = myActivities.filter(a => a.status === "pending").length;
   const approvedCount = myActivities.filter(a => a.status === "approved").length;
   const rejectedCount = myActivities.filter(a => a.status === "rejected").length;
 
-  // Mock employee profile data
+  // Use actual logged-in employee data or fallback to defaults
   const employeeProfile = useMemo(() => ({
-    name: user.role === 'employee' ? 'John Smith' : 'Employee User',
-    email: `${user.role}@roletrack.com`,
-    role: 'Employee',
-    department: 'Engineering',
-    employeeId: 'EMP-' + user.role.toUpperCase().slice(0, 4),
+    name: user.employeeName || 'Employee User',
+    email: user.email || `${user.role}@roletrack.com`,
+    role: user.roleTitle || 'Employee',
+    department: user.department || 'General',
+    employeeId: user.employeeId || 'EMP-' + user.role.toUpperCase().slice(0, 4),
     joinedDate: '2025-01-01',
     manager: 'Sarah Johnson',
     status: 'active'
-  }), [user.role]);
+  }), [user]);
 
   // Sort activities by date
   const sortedActivities = useMemo(() => {
