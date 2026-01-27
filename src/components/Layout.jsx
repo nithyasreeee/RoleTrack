@@ -49,7 +49,7 @@ export default function Layout({ children }) {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-200 dark:border-gray-800 shadow-2xl transition-all duration-300 z-40 ${
+      <aside className={`fixed left-0 top-0 h-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-200 dark:border-gray-800 shadow-2xl transition-all duration-300 z-[50] overflow-y-auto ${
         isMobile 
           ? (open ? 'translate-x-0 w-72' : '-translate-x-full w-72')
           : (open ? 'w-72' : 'w-20')
@@ -72,8 +72,12 @@ export default function Layout({ children }) {
               )}
               <button 
                 onClick={toggleSidebar}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all hover:scale-110 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                }}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all active:scale-95 touch-manipulation min-h-[48px] min-w-[48px] flex items-center justify-center"
                 aria-label={open ? "Close sidebar" : "Open sidebar"}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <svg className={`w-6 h-6 text-gray-700 dark:text-gray-300 transition-transform ${!open && !isMobile && 'rotate-180'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {isMobile ? (
@@ -150,15 +154,22 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      {/* Mobile Menu Button - Fixed Top Right */}
+      {/* Mobile Menu Button - Fixed Bottom Right for better accessibility */}
       {isMobile && !open && (
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 z-50 p-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-110 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center animate-fade"
+          onTouchStart={(e) => {
+            e.currentTarget.style.transform = 'scale(0.95)';
+          }}
+          onTouchEnd={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+          className="fixed bottom-6 right-6 z-[60] p-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 backdrop-blur-xl rounded-full shadow-2xl hover:shadow-3xl transition-all active:scale-95 touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center animate-fade"
           aria-label="Open sidebar"
+          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
-          <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       )}
@@ -167,7 +178,7 @@ export default function Layout({ children }) {
       <main className={`flex-1 transition-all duration-300 min-h-screen ${
         isMobile ? 'ml-0' : (open ? 'ml-72' : 'ml-20')
       }`}>
-        <div className="w-full max-w-[1920px] mx-auto p-4 sm:p-6 lg:p-8 relative z-50">
+        <div className="w-full max-w-[1920px] mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
           <div className="animate-fade">
             {children}
           </div>
