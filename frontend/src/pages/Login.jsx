@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEmployees } from "../context/EmployeeContext";
+import { authAPI } from "../services/api";
 
 export default function Login() {
-  const [identifier, setIdentifier] = useState(""); // Email or Employee ID
+  const [identifier, setIdentifier] = useState(""); // Email
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -12,14 +12,7 @@ export default function Login() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   
   const { login } = useAuth();
-  const { employees } = useEmployees();
   const nav = useNavigate();
-
-  // Authentication credentials (in production, handled by backend)
-  const credentials = {
-    admin: { username: "admin", password: "admin123", email: "admin@roletrack.com" },
-    manager: { username: "manager", password: "manager123", email: "manager@roletrack.com" },
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,49 +21,36 @@ export default function Login() {
 
     // Validate inputs
     if (!identifier.trim() || !password.trim()) {
-      setError("Invalid credentials");
+      setError("Please enter email and password");
       setIsLoading(false);
       return;
     }
 
-    // Simulate API delay for realistic UX
-    await new Promise(resolve => setTimeout(resolve, 800));
-
     try {
-      // Check admin credentials
-      if ((identifier === credentials.admin.username || identifier === credentials.admin.email) && 
-          password === credentials.admin.password) {
-        login("admin", null);
-        nav("/admin");
-        return;
+      // Call backend API for authentication
+      const result = await authAPI.login(identifier, password);
+      
+      if (result.success) {
+        // Store token and user data
+        localStorage.setItem('authToken', result.data.token);
+        localStorage.setItem('user', JSON.stringify(result.data.user));
+        
+        // Update auth context
+        const userData = result.data.user;
+        login(userData.role, userData);
+        
+        // Redirect based on role
+        if (userData.role === 'admin') {
+          nav("/admin");
+        } else if (userData.role === 'manager') {
+          nav("/manager");
+        } else {
+          nav("/employee");
+        }
       }
-
-      // Check manager credentials
-      if ((identifier === credentials.manager.username || identifier === credentials.manager.email) && 
-          password === credentials.manager.password) {
-        login("manager", null);
-        nav("/manager");
-        return;
-      }
-
-      // Check employee credentials
-      const employee = employees.find(emp => 
-        emp.status === "active" && 
-        (emp.email === identifier || 
-         emp.id === identifier || 
-         emp.name.toLowerCase() === identifier.toLowerCase())
-      );
-
-      if (employee && password === "emp123") {
-        login("employee", employee);
-        nav("/employee");
-        return;
-      }
-
-      // If no match found
-      setError("Invalid credentials");
     } catch (err) {
-      setError("Server error");
+      const errorMessage = err.response?.data?.message || 'Invalid credentials';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -256,23 +236,23 @@ export default function Login() {
               </div>
             )}
 
-            {/* Email or Employee ID Field */}
+            {/* Email Field */}
             <div className="space-y-1.5">
               <label htmlFor="identifier" className="block text-sm font-bold text-gray-700 dark:text-gray-300">
-                Email or Employee ID
+                Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <input
                   id="identifier"
-                  type="text"
+                  type="email"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="Enter your email or employee ID"
+                  placeholder="Enter your email address"
                   className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-medium text-base"
                   required
                   disabled={isLoading}
