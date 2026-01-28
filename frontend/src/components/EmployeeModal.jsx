@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useEmployees } from "../context/EmployeeContext";
+import { employeeAPI, authAPI } from "../services/api";
 
 export default function EmployeeModal({ close, employee }) {
   const { dispatch } = useEmployees();
@@ -7,13 +8,17 @@ export default function EmployeeModal({ close, employee }) {
   const [name, setName] = useState("");
   const [dept, setDept] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("employee");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (employee) {
       setName(employee.name || "");
       setDept(employee.department || "");
       setEmail(employee.email || "");
+      setRole(employee.role || "employee");
     }
   }, [employee]);
 
@@ -22,30 +27,75 @@ export default function EmployeeModal({ close, employee }) {
     if (!name.trim()) newErrors.name = "Name is required";
     if (name.trim().length < 2) newErrors.name = "Name must be at least 2 characters";
     if (!dept.trim()) newErrors.dept = "Department is required";
-    if (employee && !email.trim()) newErrors.email = "Email is required";
-    if (employee && email && !/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
+    if (!email.trim()) newErrors.email = "Email is required";
+    if (email && !/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
+    if (!role) newErrors.role = "Role is required";
+    if (!employee && !password.trim()) newErrors.password = "Password is required";
+    if (!employee && password.trim().length < 6) newErrors.password = "Password must be at least 6 characters";
     return newErrors;
   };
 
-  const save = () => {
+  const save = async () => {
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
     
-    if (employee) {
-      // Update existing employee
-      dispatch({ 
-        type: "update", 
-        id: employee.id, 
-        payload: { name, department: dept, email } 
-      });
-    } else {
-      // Add new employee
-      dispatch({ type: "add", payload: { name, department: dept } });
+    setIsSubmitting(true);
+
+    try {
+      if (employee) {
+        // Update existing employee
+        const [firstName, ...lastNameParts] = name.split(' ');
+        const lastName = lastNameParts.join(' ') || firstName;
+        
+        await employeeAPI.updateEmployee(employee.id || employee._id, {
+          firstName,
+          lastName,
+          email,
+          department: dept,
+        });
+
+        // If we need to update user role, call auth API
+        // (This would require backend support for updating user role)
+
+        dispatch({ 
+          type: "update", 
+          id: employee.id || employee._id, 
+          payload: { name, department: dept, email, role } 
+        });
+        
+        alert('Employee updated successfully!');
+      } else {
+        // Add new employee - First create user account, then employee record
+        const [firstName, ...lastNameParts] = name.split(' ');
+        const lastName = lastNameParts.join(' ') || firstName;
+
+        // Create user account
+        await authAPI.register({
+          name,
+          email,
+          password,
+          role,
+        });
+
+        // Optionally: Create employee record with additional details
+        // This depends on your backend structure
+        
+        dispatch({ type: "add", payload: { name, department: dept, email, role } });
+        
+        alert('Employee created successfully!');
+      }
+      
+      close();
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to save employee';
+      setErrors({ submit: errorMessage });
+      alert(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
-    close();
   };
 
   return (
@@ -83,6 +133,17 @@ export default function EmployeeModal({ close, employee }) {
 
         {/* Body */}
         <div className="p-4 sm:p-6 space-y-5">
+          {errors.submit && (
+            <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-700 rounded-xl p-3">
+              <div className="flex items-start space-x-3">
+                <svg className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm text-red-800 dark:text-red-200 font-semibold">{errors.submit}</p>
+              </div>
+            </div>
+          )}
+
           <div className="form-group">
             <label className="form-label">
               Full Name *
@@ -105,6 +166,85 @@ export default function EmployeeModal({ close, employee }) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {errors.name}
+              </p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              Email *
+            </label>
+            <input
+              type="email"
+              placeholder="john.doe@company.com"
+              className={`input ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : ''}`}
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value);
+                setErrors(prev => ({ ...prev, email: '' }));
+              }}
+              autoComplete="email"
+            />
+            {errors.email && (
+              <p className="form-error flex items-center gap-1">
+                <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {errors.email}
+              </p>
+            )}
+          </div>
+
+          {!employee && (
+            <div className="form-group">
+              <label className="form-label">
+                Password *
+              </label>
+              <input
+                type="password"
+                placeholder="Enter password (min. 6 characters)"
+                className={`input ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : ''}`}
+                value={password}
+                onChange={e => {
+                  setPassword(e.target.value);
+                  setErrors(prev => ({ ...prev, password: '' }));
+                }}
+                autoComplete="new-password"
+              />
+              {errors.password && (
+                <p className="form-error flex items-center gap-1">
+                  <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {errors.password}
+                </p>
+              )}
+            </div>
+          )}
+
+          <div className="form-group">
+            <label className="form-label">
+              Role *
+            </label>
+            <select
+              className={`input ${errors.role ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : ''}`}
+              value={role}
+              onChange={e => {
+                setRole(e.target.value);
+                setErrors(prev => ({ ...prev, role: '' }));
+              }}
+            >
+              <option value="">Select role</option>
+              <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
+              <option value="employee">Employee</option>
+            </select>
+            {errors.role && (
+              <p className="form-error flex items-center gap-1">
+                <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {errors.role}
               </p>
             )}
           </div>
@@ -138,32 +278,6 @@ export default function EmployeeModal({ close, employee }) {
               </p>
             )}
           </div>
-
-          {employee && (
-            <div className="form-group">
-              <label className="form-label">
-                Email *
-              </label>
-              <input
-                type="email"
-                placeholder="john.doe@company.com"
-                className={`input ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : ''}`}
-                value={email}
-                onChange={e => {
-                  setEmail(e.target.value);
-                  setErrors(prev => ({ ...prev, email: '' }));
-                }}
-              />
-              {errors.email && (
-                <p className="form-error flex items-center gap-1">
-                  <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {errors.email}
-                </p>
-              )}
-            </div>
-          )}
         </div>
 
         {/* Footer */}
@@ -177,15 +291,28 @@ export default function EmployeeModal({ close, employee }) {
           <button 
             onClick={save} 
             className="btn btn-primary flex items-center justify-center space-x-2 w-full sm:w-auto"
+            disabled={isSubmitting}
           >
-            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {employee ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              )}
-            </svg>
-            <span>{employee ? 'Update Employee' : 'Add Employee'}</span>
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {employee ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  )}
+                </svg>
+                <span>{employee ? 'Update Employee' : 'Add Employee'}</span>
+              </>
+            )}
           </button>
         </div>
       </div>

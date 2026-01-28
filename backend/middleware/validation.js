@@ -54,10 +54,7 @@ exports.loginValidation = [
   body('email')
     .trim()
     .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Please provide a valid email')
-    .normalizeEmail(),
+    .withMessage('Email or username is required'),
   
   body('password')
     .notEmpty()

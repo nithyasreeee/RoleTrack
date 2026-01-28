@@ -57,8 +57,24 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Check if user exists (include password for comparison)
-    const user = await User.findOne({ email }).select('+password');
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email/username and password',
+      });
+    }
+
+    // Escape special regex characters from user input
+    const escapedInput = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // Check if user exists by email or username (case-insensitive)
+    const user = await User.findOne({
+      $or: [
+        { email: email.toLowerCase() },
+        { name: { $regex: new RegExp(`^${escapedInput}\\s`, 'i') } }, // Matches start of name
+        { name: { $regex: new RegExp(`^${escapedInput}$`, 'i') } }, // Matches entire name
+      ]
+    }).select('+password');
 
     if (!user) {
       return res.status(401).json({
