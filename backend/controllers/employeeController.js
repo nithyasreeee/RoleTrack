@@ -1,4 +1,5 @@
 const Employee = require('../models/Employee');
+const User = require('../models/User');
 
 /**
  * @desc    Get all employees with pagination, search, and filters
@@ -134,13 +135,53 @@ exports.createEmployee = async (req, res, next) => {
     // Add created by user
     req.body.createdBy = req.user._id;
 
+    // Create employee first
     const employee = await Employee.create(req.body);
+
+    // Generate username and email for login
+    const username = req.body.firstName.toLowerCase();
+    const loginEmail = `${username}@roletrack.com`;
+    
+    // Default password (can be customized)
+    const defaultPassword = 'roletrack123';
+
+    // Check if user with this email already exists
+    const existingUser = await User.findOne({ email: loginEmail });
+    
+    let user;
+    if (!existingUser) {
+      // Create User account for this employee
+      user = await User.create({
+        name: `${req.body.firstName} ${req.body.lastName}`,
+        email: loginEmail,
+        password: defaultPassword,
+        role: 'employee',
+        employeeId: employee._id,
+        status: req.body.status || 'active',
+      });
+
+      // Link user to employee
+      employee.userId = user._id;
+      await employee.save();
+    } else {
+      // Link to existing user
+      employee.userId = existingUser._id;
+      existingUser.employeeId = employee._id;
+      await existingUser.save();
+      await employee.save();
+      user = existingUser;
+    }
 
     res.status(201).json({
       success: true,
       message: 'Employee created successfully',
       data: {
         employee,
+        loginCredentials: {
+          email: loginEmail,
+          password: defaultPassword,
+          message: 'Please share these credentials with the employee',
+        },
       },
     });
   } catch (error) {
@@ -177,6 +218,13 @@ exports.updateEmployee = async (req, res, next) => {
       }
     );
 
+    // If status changed, update the corresponding User account
+    if (req.body.status && employee.userId) {
+      await User.findByIdAndUpdate(employee.userId, {
+        status: req.body.status,
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Employee updated successfully',
@@ -205,11 +253,16 @@ exports.deleteEmployee = async (req, res, next) => {
       });
     }
 
+    // Delete associated User account if exists
+    if (employee.userId) {
+      await User.findByIdAndDelete(employee.userId);
+    }
+
     await employee.deleteOne();
 
     res.status(200).json({
       success: true,
-      message: 'Employee deleted successfully',
+      message: 'Employee and associated user account deleted successfully',
       data: null,
     });
   } catch (error) {
@@ -246,6 +299,74 @@ exports.getEmployeeStats = async (req, res, next) => {
       success: true,
       data: {
         stats: stats[0],
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Create user accounts for employees without login credentials
+ * @route   POST /api/employees/sync-users
+ * @access  Private (Admin only)
+ */
+exports.syncEmployeeUsers = async (req, res, next) => {
+  try {
+    // Get all employees without userId
+    const employeesWithoutUser = await Employee.find({ userId: null });
+
+    if (employeesWithoutUser.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'All employees already have user accounts',
+        data: { synced: 0 },
+      });
+    }
+
+    const syncedCredentials = [];
+
+    for (const employee of employeesWithoutUser) {
+      const username = employee.firstName.toLowerCase();
+      const loginEmail = `${username}@roletrack.com`;
+      const defaultPassword = 'roletrack123';
+
+      // Check if user already exists with this email
+      let user = await User.findOne({ email: loginEmail });
+
+      if (!user) {
+        // Create new user
+        user = await User.create({
+          name: `${employee.firstName} ${employee.lastName}`,
+          email: loginEmail,
+          password: defaultPassword,
+          role: 'employee',
+          employeeId: employee._id,
+          status: employee.status,
+        });
+      } else {
+        // Link existing user to employee
+        user.employeeId = employee._id;
+        await user.save();
+      }
+
+      // Link user to employee
+      employee.userId = user._id;
+      await employee.save();
+
+      syncedCredentials.push({
+        employeeName: `${employee.firstName} ${employee.lastName}`,
+        email: loginEmail,
+        password: defaultPassword,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully created user accounts for ${syncedCredentials.length} employees`,
+      data: {
+        synced: syncedCredentials.length,
+        credentials: syncedCredentials,
       },
     });
   } catch (error) {

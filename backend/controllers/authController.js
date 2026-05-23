@@ -64,12 +64,20 @@ exports.login = async (req, res, next) => {
       });
     }
 
+    let loginEmail = email.toLowerCase().trim();
+    
+    // If user enters just username (without @roletrack.com), append it
+    if (!loginEmail.includes('@')) {
+      loginEmail = `${loginEmail}@roletrack.com`;
+    }
+
     // Escape special regex characters from user input
     const escapedInput = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     // Check if user exists by email or username (case-insensitive)
     const user = await User.findOne({
       $or: [
+        { email: loginEmail },
         { email: email.toLowerCase() },
         { name: { $regex: new RegExp(`^${escapedInput}\\s`, 'i') } }, // Matches start of name
         { name: { $regex: new RegExp(`^${escapedInput}$`, 'i') } }, // Matches entire name

@@ -235,7 +235,6 @@ export default function EmployeeModal({ close, employee }) {
               }}
             >
               <option value="">Select role</option>
-              <option value="admin">Admin</option>
               <option value="manager">Manager</option>
               <option value="employee">Employee</option>
             </select>

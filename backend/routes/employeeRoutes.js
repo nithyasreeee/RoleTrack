@@ -7,6 +7,7 @@ const {
   updateEmployee,
   deleteEmployee,
   getEmployeeStats,
+  syncEmployeeUsers,
 } = require('../controllers/employeeController');
 const { protect, authorize } = require('../middleware/auth');
 const {
@@ -23,12 +24,15 @@ router.use(protect);
 // Statistics route (before /:id to avoid conflicts)
 router.get('/stats', authorize('admin', 'manager'), getEmployeeStats);
 
+// Sync employee users (Admin only)
+router.post('/sync-users', authorize('admin'), syncEmployeeUsers);
+
 // Main CRUD routes
 router
   .route('/')
   .get(queryValidation, validate, getEmployees)
   .post(
-    authorize('admin', 'manager'),
+    authorize('manager'),
     createEmployeeValidation,
     validate,
     createEmployee
